@@ -134,3 +134,4 @@ dmypy.json
 *.record
 *.v2
 *.dat
+.vscode
