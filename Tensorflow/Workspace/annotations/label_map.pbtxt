@@ -1,0 +1,48 @@
+item { 
+	name:'LeftL'
+	id:1
+}
+item { 
+	name:'LeftA'
+	id:2
+}
+item { 
+	name:'LeftO'
+	id:3
+}
+item { 
+	name:'LeftV'
+	id:4
+}
+item { 
+	name:'LeftOpenHand'
+	id:5
+}
+item { 
+	name:'RIndexUp'
+	id:6
+}
+item { 
+	name:'RIndexDown'
+	id:7
+}
+item { 
+	name:'RIndexLeft'
+	id:8
+}
+item { 
+	name:'RIndexRight'
+	id:9
+}
+item { 
+	name:'RIndexFront'
+	id:10
+}
+item { 
+	name:'RThumbBack'
+	id:11
+}
+item { 
+	name:'RClearC'
+	id:12
+}
