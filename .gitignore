@@ -131,7 +131,7 @@ dmypy.json
 # Ignore dataset entries and configs
 *.jpg
 *.xml
-*.record
 *.v2
 *.dat
 .vscode
+Tensorflow/Workspace/pre-trained-model/ssd_mobilenet_v2_fpnlite_320x320_coco17_tpu-8/
