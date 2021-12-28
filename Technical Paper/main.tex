@@ -157,16 +157,15 @@ The basic building block introduced by this paper is a bottleneck depth-separabl
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/MoblieNetV2Table1.png} \caption{Bottleneck residual block transforming from k to k' channels, with stride s, and expansion factor t.}
+    \includegraphics[width=0.5\textwidth]{ML Project/resources/image/MoblieNetV2Table1.png} \caption{Bottleneck residual block transforming from k to k' channels, with stride s, and expansion factor t.}
 \end{figure}
 \label{figure2}
 
 The general architecture of the model contains an initial fully convolutional layer with 32 filters, followed by 19 residual bottleneck layers described, as shown in Figure 3. The kernel size is 3 × 3, and dropout and batch normalization layers are used during training.
-This specific architecture boasts a total of 3.4 million trainable parameters.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/MoblieNetV2Table2.png} \caption{The full model's architecture. Each line represents n repetition of the same layer. All layers feature the same number of channels c. The first layer of each sequence has stride s, whilst the others have stride 1.}
+    \includegraphics[width=0.5\textwidth]{ML Project/resources/image/MoblieNetV2Table2.png} \caption{The full model's architecture. Each line represents n repetition of the same layer. All layers feature the same number of channels c. The first layer of each sequence has stride s, whilst the others have stride 1.}
 \end{figure}
 \label{figure3}
 
@@ -175,7 +174,7 @@ As we can see, this version of the model features $2,223,872$ trainable paramete
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/architecture.PNG} \caption{The wrapped model's architecture, complete with parameters.}
+    \includegraphics[width=0.5\textwidth]{ML Project/resources/image/architecture.PNG} \caption{The wrapped model's architecture, complete with parameters.}
 \end{figure}
 \label{figure4}
 
@@ -199,14 +198,14 @@ To solve the hand swapping issue, we retrained the model once again and removed 
 The training statistics for this last model are shown in \hyperref[figure5]{Figure 5}.
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/statistics.PNG} \caption{All losses and learning rate statistics for the 40000 steps model trained without the horizontal flip data augmentation layer.}
+    \includegraphics[width=0.5\textwidth]{ML Project/resources/image/statistics.PNG} \caption{All losses and learning rate statistics for the 40000 steps model trained without the horizontal flip data augmentation layer.}
 \end{figure}
 \label{figure5}
 The role of the HSV thresholding preprocessing step plays an impactful role on the model's ability to process the input frames. Despite the fact that the dataset contains images with hands in different spatial positions not over a simple background, the model sometimes produces random false positives, detecting a gesture where there is none. This may be due to the fact that the whole dataset contains the same static background, or that some of the features learnt by the network are edge bound and some objects happen to fit partially those feature requirements. However, after thresholding most of the background contains no data, as shown in \hyperref[figure6]{Figure 6}, and thus gives to the model less room for error in evaluating gestures, often resulting in confidence rates of around 95\%-99\%.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/thresholding.PNG} \caption{The effect of thresholding, as seen thorugh the \textit{\href{https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/CreateHSVProfile.py}{CreateHSVProfile.py}} script.}
+    \includegraphics[width=0.5\textwidth]{ML Project/resources/image/thresholding.PNG} \caption{The effect of thresholding, as seen thorugh the \textit{\href{https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/CreateHSVProfile.py}{CreateHSVProfile.py}} script.}
 \end{figure}
 \label{figure6}
 
