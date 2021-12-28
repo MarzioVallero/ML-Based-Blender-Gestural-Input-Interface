@@ -121,7 +121,7 @@ Most of modern era 3D software human-computer interfaces rely onto the usage of 
 It has been proven already in \hyperref[Ref4]{[6]} that Engineering Graphics are amongst the most difficult tasks to fully grasp for students and that 3D simulated environments improve their learning capabilities.\linebreak
 This paper aims at detailing the steps required to create an object detection neural network able to recognize static hand gestures. Such network is a Single Shot Multibox Detector \hyperref[Ref1]{[3]}, designed by Google Brain researchers as seen in \hyperref[RefSSD]{[1]}, and trained on Microsoft's COCO 17 dataset (\hyperref[Ref2]{[4]}). Its checkpoints are publicly available through \hyperref[Ref10]{[9]}.\linebreak
 The project will first introduce the steps for the generation of a custom dataset for training, applying data augmentation and negative samples. This is done to reduce the bias due to the fact that it contains only images of the same person. This dataset will then be used to train through transfer learning (\hyperref[Ref3]{[5]}) a checkpoint of the SSD and discuss about training statistics and experimental results.\linebreak
-This input interface could see applications as an instrument for learning (molecules, human body models or mechanical models) and as a mean of interaction in museums or during large-scale presentations.\linebreak
+This input interface could see applications as an instrument for learning (molecules, human body models or mechanical models) and as a mean of interaction in museums or during large-scale presentations.
 \end{flushleft}
 
 \section{Dataset}
@@ -168,7 +168,16 @@ This specific architecture boasts a total of 3.4 million trainable parameters.
     \centering
     \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/MoblieNetV2Table2.png} \caption{The full model's architecture. Each line represents n repetition of the same layer. All layers feature the same number of channels c. The first layer of each sequence has stride s, whilst the others have stride 1.}
 \end{figure}
-\label{figure2}
+\label{figure3}
+
+This architecture is then wrapped between six \textit{bottom\_up\_conv\_2d} layers and a \textit{FeatureMap} layer, as shown in figure 4.
+As we can see, this version of the model features $2,223,872$ trainable parameters and $34,112$ non-trainable ones.\linebreak
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/architecture.PNG} \caption{The wrapped model's architecture, complete with parameters.}
+\end{figure}
+\label{figure4}
 
 The loss used for training is split into four elements: classification, localization, regularization and total loss.
 Classification loss refers to the model's ability to correctly predict an object's class and uses as loss function a weighted sigmoid focal, with gamma equal to 2 and alpha equal to 0.25.
@@ -183,16 +192,34 @@ To boost the model's prediction accuracy, we tried to apply HSV skin tone thresh
 
 \section{Experiments}
 \begin{flushleft}
-The first training has been done over 20000 steps. The final Total Loss of the model had a value of 0.12, which is still too high to provide useful predictions.
-The training has then been restarted with 40000 steps. The final Total Loss came out to be $0.09876089$, which is a great improvement over previous iterations. Testing the model live immediately gives rise to bounding box detection issues and general inaccuracy of the predictions, without much generalization capabilities. Moreover, since the network during training performs internally horizontal flips for data augmentation, the left and right hand gestures get often swapped or overlapped.\linebreak
-To boost the accuracy of the network, we threshold its input using an HSV profile custom made through a script, which can be changed to better suit each user.
-To solve the hand swapping issue, we retrained the model and removed the horizontal flipping data augmentation layer.\linebreak
-The results are as follows.
+All the models have been trained onto a machine equipped with an \textit{Intel i5-11600K} CPU and accelerated through an \textit{NVidia GeForce RTX 2060 6GB} GPU.
+The first training has been done over $20000$ steps and required over two hours to complete: this produced a model with a final Total Loss of $0.12568491$, still too high to provide useful predictions. Testing this checkpoint in fact proved to be unfeasible, as it was not able to recognize almost anything at all during the evaluation phase.
+The training has then been restarted with $40000$ steps, requiring another two hours and a half. The final Total Loss came out to be $0.09876089$, which is a great improvement over previous iterations. However, testing the model live immediately gave rise to bounding box detection issues and general inaccuracy of the predictions, without much generalization capabilities. Moreover, since the network during training internally performs horizontal flips for data augmentation, the left and right hand gestures get often swapped or overlapped. To boost the accuracy of the network, we threshold its input using an HSV profile custom made through a script, which can be changed to better suit each user.
+To solve the hand swapping issue, we retrained the model once again and removed the horizontal flipping data augmentation layer. This last training required a total of four hours and a half to complete. 
+The training statistics for this last model are shown in \hyperref[figure5]{Figure 5}.
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/statistics.PNG} \caption{All losses and learning rate statistics for the 40000 steps model trained without the horizontal flip data augmentation layer.}
+\end{figure}
+\label{figure5}
+The role of the HSV thresholding preprocessing step plays an impactful role on the model's ability to process the input frames. Despite the fact that the dataset contains images with hands in different spatial positions not over a simple background, the model sometimes produces random false positives, detecting a gesture where there is none. This may be due to the fact that the whole dataset contains the same static background, or that some of the features learnt by the network are edge bound and some objects happen to fit partially those feature requirements. However, after thresholding most of the background contains no data, as shown in \hyperref[figure6]{Figure 6}, and thus gives to the model less room for error in evaluating gestures, often resulting in confidence rates of around 95\%-99\%.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ComputerVisionReport/resources/image/thresholding.PNG} \caption{The effect of thresholding, as seen thorugh the \textit{\href{https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/CreateHSVProfile.py}{CreateHSVProfile.py}} script.}
+\end{figure}
+\label{figure6}
 
 \end{flushleft}
 
 \section{Conclusions}
 \begin{flushleft}
+The process of producing and understanding the model presented in this paper has been multi-faceted and long, however it also proved to be a very formative experience.\linebreak
+The generation of the dataset has been a quite daunting task, requiring some days of work just for capturing and labeling. Moreover, the expansion of the dataset to include also negative samples to feed to the network resulted into a better generalization of the gesture features, reducing by a significant margin the false positives due to predicting gestures where there are none. In fact, one of the most common pitfalls in these kinds of applications is the false prediction of a hand gesture on the user's face, which in our case has been mitigated quite well.\linebreak
+Setting up the \textit{pipeline.config} file proved to be a challenging task too, due to the required installation of the Tensorflow Object Detection API, which brought in many versioning issues deriving from Tensorflow 1 and 2 incompatible calls among the \textit{Tensorflow/models} submodule's scripts. In the end, parts of those scripts had to be modified by us in order to account for updates in Tensorflow's API.\linebreak
+The analysis of the \textit{pipeline.config} file also gave us insight about the inner workings of the model, letting us tinker around hardware specific definitions to improve training performance (like the batch size, which we found out to boast better performance at value 8) and removing components which were working against our needs.\linebreak
+The model's generalization capabilities over the single-person dataset proved to be extremely promising when evaluated onto different people. The model expects a certain shape and orientation, thus incorrect gestures due to individual's interpretation of a gesture still get unrecognized, though gestures which try to resemble more the original dataset end up being recognized with no issue and a high confidence of around 90\%. This requires a bit of effort from the user's side to work, however we believe it to be a quite encouraging result given the amount of data at our disposal. This aspect could very well be improved by generating a bigger dataset with higher user variance, especially in terms of hand morphology and skin tone, and consequently training for a higher number of steps.\linebreak
+In conclusion, we believe the results of this paper to be significant, in that they provide insight over the techniques and approaches to be used to produce gestural input interfaces.\linebreak
 
 \end{flushleft}
 
