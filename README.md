@@ -42,11 +42,30 @@ The compiler used to process the LaTeX documentation is MiKTeX, which can be ins
 ## Usage
 
 When not specifically stated, all shell commands should be run from the root directory of the project.
+The trained model can be tested through the [ModelTest.ipynb](https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/ModelTest.ipynb) script.
 
-// TODO: add usage information
+The model is able to recognize gestures exclusive to the left or the right hand, at the same time. Swapping the gestures of the hands generally should not produce detections, apart from some known cases of aliasing.  
+Follows a list of classes and their supposed linked action.  
+
+Left Hand Classes:   
+L shape -> Object Root Select  
+Fist shape -> Grab/Move  
+O shape -> Rotate  
+V shape -> View/Transform Select (Global/Local and Wireframe/Solid/Rendered)  
+Open Hand -> Unhide all objects / Hide current object  
+
+Right Hand Classes:  
+Index pointing up -> Z positive axis  
+Index pointing down -> Z negative axis  
+Index pointing left -> X negative axis, previous  
+Index pointing right -> X positive axis, next  
+Index pointing forward -> Y positive axis  
+Thumb pointing backwards -> Y negative axis  
+C shape (all fingers with the index) -> Clear current transformation  
+
 
 ## Contributing
-Contribution to the project is welcome, although the project won't be maintained in the future by the development team.
+Contribution to the project is welcome, although the project won't be maintained in the future.  
 
 ## Authors and Acknowledgement
 
