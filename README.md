@@ -3,7 +3,9 @@
 SSD MobileNet Based Blender Gestural Input Interface is a Python based project that aims at creating a Human Computer Interface for navigation and object manipulation in Blender through the use of hand gestures.  
 This repository contains all the relevant data and steps required to produce a custom dataset for training, training and hooking to a Blender instance.  
 
-// TODO: add video
+
+https://user-images.githubusercontent.com/73691795/148990685-6ff03416-1f1b-4dd0-9d76-a4d393b1094c.mp4
+
 
 ## Installation
 
