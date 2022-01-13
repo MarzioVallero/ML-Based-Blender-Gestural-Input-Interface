@@ -4,3 +4,6 @@
 [submodule "Tensorflow/models"]
 	path = Tensorflow/models
 	url = https://github.com/tensorflow/models.git
+[submodule "review_object_detection_metrics"]
+	path = review_object_detection_metrics
+	url = https://github.com/rafaelpadilla/review_object_detection_metrics.git
