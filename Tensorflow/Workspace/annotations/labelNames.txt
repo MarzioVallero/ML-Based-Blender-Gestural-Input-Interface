@@ -1,0 +1,12 @@
+LeftL
+LeftA
+LeftO
+LeftV
+LeftOpenHand
+RIndexUp
+RIndexDown
+RIndexLeft
+RIndexRight
+RIndexFront
+RThumbBack
+RClearC
