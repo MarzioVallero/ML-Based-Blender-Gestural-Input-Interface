@@ -4,6 +4,7 @@
 \usepackage{times}
 \usepackage{epsfig}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{amssymb}
 
@@ -77,7 +78,7 @@ This process produces, for each frame, an output \textit{.xml} file that embeds 
     \includegraphics[width=0.5\textwidth]{resources/image/labelImgScreenshot.PNG} \caption{The LabelImg interface after drawing a bounding box around a gesture.}
 \end{figure}
 
-The final dataset thus contains $1300$ images representing the same person, on the same background, doing a total of 12 different gestures. It has been split into two partitions, with 25\% for testing and 75\% for training.
+The final dataset thus contains $1300$ images representing the same person, on the same background, doing a total of 12 different gestures. It has been split into two partitions, with 25\% for validation and 75\% for training.
 \end{flushleft}
 
 \section{Methods}
@@ -132,7 +133,10 @@ To boost the model's prediction accuracy, HSV skin tone thresholding has been ap
 
 \section{Experiments}
 \begin{flushleft}
-All the models have been trained onto a machine equipped with an \textit{Intel i5-11600K} CPU and accelerated through an \textit{NVidia GeForce RTX 2060 6GB} GPU.
+All the models have been trained onto a machine equipped with an \textit{Intel i5-11600K} CPU, 32 GB of DDR4 3600 MHz RAM and accelerated through an \textit{NVidia GeForce RTX 2060 6GB} GPU.
+\end{flushleft}
+\subsection{Training}
+\begin{flushleft}
 The first training has been done over $20000$ steps, with a batch size of $8$, totaling $82$ epochs, and required over two hours to complete: this produced a model with a final Total Loss of $0.12568491$, still too high to provide stable predictions. Testing this checkpoint in fact proved to be unfeasible, as it was not able to recognize almost anything at all during the evaluation phase.
 The training has then been resumed for another $20000$ steps, requiring another two hours and a half. The final Total Loss came out to be $0.09876089$, which is a great improvement over previous iterations. However, testing the model live immediately gave rise to bounding box detection issues and general inaccuracy of the predictions, without much generalization capabilities. Moreover, since the network during training internally performed horizontal flips for data augmentation, the left and right hand gestures got often swapped or overlapped. To boost the accuracy of the network, its input gets thresholded using an HSV profile, customizable to better suit each user.
 The hand swapping issue, has been solved by retraining the model from scratch whilst removing the horizontal flip data augmentation layer, this time with a batch size of $16$, totaling $328$ epochs. This last training required only four hours and a half to complete, suggesting that the GPU's hardware characteristics were not well exploited previously.
@@ -140,7 +144,7 @@ The training statistics for this last model are shown in \hyperref[figure5]{Figu
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/statistics.PNG} \caption{All losses and learning rate statistics for the 40000 steps model trained without the horizontal flip data augmentation layer. From top left to bottom right: Classification Loss, Localization Loss, Regularization Loss, Total Loss and Learning Rate}
+    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/statistics.PNG} \caption{All losses and learning rate statistics for the 40000 steps model trained without the horizontal flip data augmentation layer. From top left to bottom right: Classification Loss, Localization Loss, Regularization Loss, Total Loss and Learning Rate.}
 \end{figure}
 \label{figure5}
 
@@ -151,14 +155,76 @@ The role of the HSV thresholding preprocessing step plays an impactful role on t
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/thresholding.PNG} \caption{The effect of thresholding, as seen thorugh the \textit{\href{https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/CreateHSVProfile.py}{CreateHSVProfile.py}} script.}
+    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/thresholding.PNG}
+    \caption{The effect of thresholding, as seen thorugh the \textit{\href{https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/CreateHSVProfile.py}{CreateHSVProfile.py}} script.}
 \end{figure}
 \label{figure6}
 
 \end{flushleft}
 \subsection{Results}
 \begin{flushleft}
-TODO
+All the performance metrics hereby presented are based on the work of Padilla \etal~\cite{electronics10030279}.\linebreak
+The precision to recall curves for the 12 classes have been computed for two different values of Intersection Over Union percentages: 50\% and 80\%. This has been done as a way to provide insight over the model's stability in correctly localizing a gesture.\linebreak
+In the $IOU=50$ curves, shown in \hyperref[figure7]{Figure 7}, it's clear to see that the model is able to yield exceptional precision over all the classes with respect to the recall, with the \textit{LeftA} and \textit{RIndexRight} boasting a AP score of $1.0$ and most of the other classes following closely to the same result. The two worst performing classes are \textit{RIndexUp} and \textit{RThumbBack}, respectively with an AP score of $0.9217$ and $0.9242$, which are still extremely good results. All the \textit{PASCAL} AP scores are listed in \hyperref[table1]{Table 1}.
+
+\def\arraystretch{1.2}%
+\begin{table}[!h]
+    \begin{center}    
+        \begin{tabular}{l|r|r|r}
+        \hline
+        \multicolumn{4}{c}{AP scores}\\
+        \hline
+        \hline
+        \multicolumn{2}{c|}{Classes} & IOU=0.50 & IOU=0.80  \\
+        \hline
+        \multicolumn{1}{c}{\texttt{LeftA}} &  & 1.0 & 0.4105 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{LeftL}} &  & 0.9933 & 0.5018 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{LeftO}} &  & 0.9843 & 0.3903 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{LeftOpenHand}} &  & 0.9890 & 0.8517 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{LeftV}} &  & 0.9453 & 0.1717 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RClearC}} &  & 0.9969 & 0.2654 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RIndexDown}} &  & 0.9694 & 0.6183 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RIndexFront}} &  & 0.9846 & 0.1852 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RIndexLeft}} &  & 0.9969 & 0.4494 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RIndexRight}} &  & 1.0 & 0.0242 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RIndexUp}} &  & 0.9217 & 0.5382 \\
+        \hline
+        \multicolumn{1}{c}{\texttt{RThumbBack}} &  & 0.9242 & 0.0240 \\
+        \hline
+        \end{tabular}
+    \end{center}
+    \caption{The AP scores among the 12 classes and both IOU values.}
+    \label{table1}
+\end{table}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/all_classes_IOU50.png}
+    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 50.}
+\end{figure}
+\label{figure7}
+
+The steeper requirement of an $IOU=80$ value is reflected onto the precision to recall curves shown on \hyperref[figure8]{Figure 8}. The best performing class is \textit{LeftOpenHand}, which yields an encouraging AP value of $0.8517$, suggesting for it to be the most stable class. However, most of the other classes make the model fall short of the expectations, with only six other classes boasting an AP score sufficiently close or greater than $0.4$. The two worst performing classes are \textit{RIndexRight} and \textit{RThumbBack}, both with a AP score close to $0.0240$, suggesting that these two classes tend to be harder to correctly localize and detect for the model.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/all_classes_IOU80.png}
+    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 80.}
+\end{figure}
+\label{figure8}
+
+Over all the classes, the model boasts the following \textit{COCO} metrics. The $AP_{50}$ has a value of $0.9757$, in line with its relative \textit{PASCAL} AP metric. The $AP_{75}$ has a value of $0.5704$, whilst the overall $AP$ has a slightly smaller value of $0.5645$. This skew between the \textit{COCO} and \textit{PASCAL} metrics suggests that the model's performance is promising and that the $IOU=80$ value is a requirement too steep to be satisfied as per the current architecture of the network.
+
 \end{flushleft}
 
 \section{Conclusions}
