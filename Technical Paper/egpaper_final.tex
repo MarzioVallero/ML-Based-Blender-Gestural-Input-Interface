@@ -151,7 +151,8 @@ The training statistics for this last model are shown in \hyperref[figure5]{Figu
 \end{flushleft}
 \subsection{HSV thresholding}
 \begin{flushleft}
-The role of the HSV thresholding preprocessing step plays an impactful role on the model's ability to process the input frames. Despite the fact that the dataset contains images with hands in different spatial positions over a complex background, the model sometimes produces random false positives, detecting a gesture where there is none. This may be due to the fact that the whole dataset contains the same static background, or that some of the features learnt by the network are edge bound and some objects happen to fit partially those feature requirements. However, after a thresholding and opening transformation, most of the background contains no data, as shown in \hyperref[figure6]{Figure 6}, and thus gives to the model less room for error in evaluating gestures, often resulting in confidence measures of around 95\%-99\%.
+The role of the HSV thresholding preprocessing step plays an impactful role on the model's ability to process the input frames. Despite the fact that the dataset contains images with hands in different spatial positions over a complex background, the model sometimes produces FP, detecting a gesture where there is none. This may be due to the fact that the whole dataset contains the same static background, or that some of the features learnt by the network are edge bound and some objects happen to fit partially those feature requirements. However, after a thresholding and opening transformation, most of the background contains no data, as shown in \hyperref[figure6]{Figure 6}, and thus gives to the model less room for error in evaluating gestures. To prove its beneficial effects, an ablation study has been conducted, whose results can be seen in \hyperref[table1]{Table 1}.
+Some classes benefit very little from the thresholding procedure, like \textit{LeftA} and \textit{RIndexFront}. Some obtain a great improvement, like \textit{RThumbBack} and \textit{RIndexRight}, while most of the classes show a 2-5\% improvement on average. The \textit{LeftO}, \textit{LeftV} and \textit{RIndexDown} get an average 2\% worsening, which however gets outweighted by the improvements in detecting the other nine classes. As such, the preprocessing step has been kept as part of the model.
 
 \begin{figure}[!h]
     \centering
@@ -168,58 +169,57 @@ The precision to recall curves for the 12 classes have been computed for two dif
 In the $IOU=50$ curves, shown in \hyperref[figure7]{Figure 7}, it's clear to see that the model is able to yield exceptional precision over all the classes with respect to the recall, with the \textit{LeftA} and \textit{RIndexRight} boasting a AP score of $1.0$ and most of the other classes following closely to the same result. The two worst performing classes are \textit{RIndexUp} and \textit{RThumbBack}, respectively with an AP score of $0.9217$ and $0.9242$, which are still extremely good results. All the \textit{PASCAL} AP scores are listed in \hyperref[table1]{Table 1}.
 
 \def\arraystretch{1.2}%
-\begin{table}[!h]
+\begin{table*}[!h]
     \begin{center}    
-        \begin{tabular}{l|r|r|r}
+        \begin{tabular}{l|r|r|r|r}
         \hline
-        \multicolumn{4}{c}{AP scores}\\
+        \multicolumn{5}{c}{AP scores}\\
         \hline
         \hline
-        \multicolumn{2}{c|}{Classes} & IOU=0.50 & IOU=0.80  \\
+        \texttt{Classes} & $AP_{50}$ \texttt{with HSV} & $AP_{80}$ \texttt{with HSV} & $AP_{50}$ \texttt{raw} & $AP_{80}$ \texttt{raw}\\
         \hline
-        \multicolumn{1}{c}{\texttt{LeftA}} &  & 1.0 & 0.4105 \\
+        \texttt{LeftA} & \textbf{1.0} & 0.4105 & \textbf{1.0} & \textbf{1.0} \\
         \hline
-        \multicolumn{1}{c}{\texttt{LeftL}} &  & 0.9933 & 0.5018 \\
+        \texttt{LeftL} & \textbf{0.9933} & 0.5018 & 0.8775 & 0.7950 \\
         \hline
-        \multicolumn{1}{c}{\texttt{LeftO}} &  & 0.9843 & 0.3903 \\
+        \texttt{LeftO} & 0.9843 & 0.3903 & \textbf{1.0} & 0.7963 \\
         \hline
-        \multicolumn{1}{c}{\texttt{LeftOpenHand}} &  & 0.9890 & 0.8517 \\
+        \texttt{LeftOpenHand} & \textbf{0.9890} & 0.8517 & 0.9600 & 0.4324 \\
         \hline
-        \multicolumn{1}{c}{\texttt{LeftV}} &  & 0.9453 & 0.1717 \\
+        \texttt{LeftV} & 0.9453 & 0.1717 & \textbf{0.9855} & 0.6535 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RClearC}} &  & 0.9969 & 0.2654 \\
+        \texttt{RClearC} & \textbf{0.9969} & 0.2654 & 0.9892 & 0.6420 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RIndexDown}} &  & 0.9694 & 0.6183 \\
+        \texttt{RIndexDown} & 0.9694 & 0.6183 & \textbf{0.9938} & 0.9087 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RIndexFront}} &  & 0.9846 & 0.1852 \\
+        \texttt{RIndexFront}  & \textbf{0.9846} & 0.1852 & 0.9823 & 0.5765 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RIndexLeft}} &  & 0.9969 & 0.4494 \\
+        \texttt{RIndexLeft}  & \textbf{0.9969} & 0.4494 & 0.9699 & 0.7648 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RIndexRight}} &  & 1.0 & 0.0242 \\
+        \texttt{RIndexRight}  & \textbf{1.0} & 0.0242 & 0.6334 & 0.1389 \\
         \hline
-        \multicolumn{1}{c}{\texttt{RIndexUp}} &  & 0.9217 & 0.5382 \\
+        \texttt{RIndexUp} & \textbf{0.9217} & 0.5382 & 0.8147 & 0.4875\\
         \hline
-        \multicolumn{1}{c}{\texttt{RThumbBack}} &  & 0.9242 & 0.0240 \\
+        \texttt{RThumbBack} & \textbf{0.9242} & 0.0240 & 0.3184 & 0.2426 \\
         \hline
         \end{tabular}
     \end{center}
-    \caption{The AP scores among the 12 classes and both IOU values.}
+    \caption{The AP scores among the 12 classes and both IOU values. The highest AP scores for each class are in bold.}
     \label{table1}
-\end{table}
+\end{table*}
 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/all_classes_IOU50.png}
-    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 50.}
+    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 50 and HSV thresholding.}
 \end{figure}
 \label{figure7}
 
 The steeper requirement of an $IOU=80$ value is reflected onto the precision to recall curves shown on \hyperref[figure8]{Figure 8}. The best performing class is \textit{LeftOpenHand}, which yields an encouraging AP value of $0.8517$, suggesting for it to be the most stable class. However, most of the other classes make the model fall short of the expectations, with only six other classes boasting an AP score sufficiently close or greater than $0.4$. The two worst performing classes are \textit{RIndexRight} and \textit{RThumbBack}, both with a AP score close to $0.0240$, suggesting that these two classes tend to be harder to correctly localize and detect for the model.
-
 \begin{figure}[!h]
     \centering
     \includegraphics[width=0.5\textwidth]{ML SSD project/resources/image/all_classes_IOU80.png}
-    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 80.}
+    \caption{The precision to recall curves for all the 12 proposed gesture classes, with IOU = 80 and HSV thresholding.}
 \end{figure}
 \label{figure8}
 
