@@ -12,19 +12,17 @@ https://user-images.githubusercontent.com/73691795/148990685-6ff03416-1f1b-4dd0-
 The version of Python used is Python 3.9.9, which can be installed following this guide:
 [Python install](https://www.python.org/downloads/)
 
-The version of OpenCV used for this project is version 4.5.3, which can be installed using the shell command:  
+All the dependencies and submodules of this project can be installed through the [requirements.txt](https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/blob/master/requirements.txt) file, by cloning this project as follows:
 ```bash
-pip install opencv-python==4.5.3
+git clone -recursive https://github.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface.git
+pip install -r requirements.txt
 ```
 
-For installing Jupyter Notebook, use the shell command:  
-```bash
-pip install notebook
-```
 Be sure to activate the local server necessary to run jupyter notebooks, using the shell command:  
 ```bash
 jupyter notebook
 ```
+
 Then, from the URL [Jupyter Notebook Tree](http://127.0.0.1:8888/tree) you'll be able to select notebooks to run. 
 Else, define a Python interpreter and run the notebooks through an IDE like Visual Studio Code.
 To install visual studio code, run the shell command:
@@ -32,11 +30,14 @@ To install visual studio code, run the shell command:
 code .
 ```
 
-For installing Tensorflow, required to train the neural network, I suggest to check out the official guide:  
+For installing Tensorflow 2, required to train and run the neural network, I suggest to check out the official guide:  
 [Tensorflow installation](https://www.tensorflow.org/install)  
 
 For installing LabelImg and learning how to use it, I suggest the GitHub repository of the project:  
 [LabelImg GitHub](https://github.com/tzutalin/labelImg)  
+
+For computing performance metrics with Open-Source Visual Interface for Object Detection Metrics and learning how to use the tool, I suggets the repository of the project:
+[Review Object Detection Metrics GitHub](https://github.com/rafaelpadilla/review_object_detection_metrics)
 
 The compiler used to process the LaTeX documentation is MiKTeX, which can be installed at the following link (although any LaTeX compiler can be used):  
 [MiKTeX installation](https://miktex.org/download)
