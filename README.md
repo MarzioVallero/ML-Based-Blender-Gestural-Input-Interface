@@ -50,7 +50,7 @@ The trained model can be tested through the [ModelTest.ipynb](https://github.com
 The model is able to recognize gestures exclusive to the left or the right hand, at the same time. Swapping the gestures of the hands generally should not produce detections, apart from some known cases of aliasing.  
 Follows a list of classes and their supposed linked action.  
 
-![Gestures Map]("Technical Paper\resources\image\GestureMap.png")  
+![Gestures Map](https://raw.githubusercontent.com/MarzioVallero/ML-Based-Blender-Gestural-Input-Interface/master/Technical%20Paper/resources/image/GestureMap.png)  
 
 Left Hand Classes:   
 L shape -> Object Root Select  
